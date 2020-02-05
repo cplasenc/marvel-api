@@ -1,0 +1,48 @@
+img {
+    width: 450px;
+    height: 500px;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+#personajes {
+    left: 0;
+    height: 70%;
+    padding-left: 100px;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    overflow-x: hidden;
+    text-align: center;
+}
+
+.article {
+    overflow: hidden;
+}
+
+#eventos {
+    text-align: center;
+    height: 70%;
+    width: 50%;
+    margin: auto;
+}
+
+#eventos > h2 {
+    color: darkred;
+}
+
+#comics {
+    right: 0;
+    height: 70%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    overflow-x: hidden;
+    text-align: center;
+}
+
+#logo {
+    width: 300px;
+    height: 150px;
+    margin-left: 0px;
+}
