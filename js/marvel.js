@@ -1,4 +1,4 @@
-const apiKey = "206d41bfd8394758727be2110432ff6b";
+const apiKey = config.YOUR_API;
 let personajes = document.querySelector("#personajes");
 let comics = document.querySelector("#comics");
 const urlComicStartWith = "https://gateway.marvel.com:443/v1/public/comics?titleStartsWith=";
@@ -6,95 +6,121 @@ const urlPersonajeStartWith = "https://gateway.marvel.com:443/v1/public/characte
 let miSpinner = document.createElement("img");
 miSpinner.src = "img/spinner.gif";
 
-var idPersonaje;
-function getPersonajes() {
-    let http = new XMLHttpRequest();
-    http.onreadystatechange = function () {
-        personajes.appendChild(miSpinner);
-        if (http.readyState == 4 && http.status == 200) {
+/* PROMISES */
+const getPersonajesPromise = () => new Promise((resolve, reject) => {
 
-            let datos = JSON.parse(this.responseText);
+    let request = new XMLHttpRequest();
+    request.onreadystatechange = (e) => {
+        if (request.readyState == 4 && request.status == 200) {
+
+            let datos = JSON.parse(e.target.responseText);
             let datosPersonajes = Object.values(datos.data.results);
-
-            personajes.innerHTML = "";
-
-            for (let i = 0; i < 10; i++) {
-
-                let nombre = document.createElement("h2");
-                let imagen = document.createElement("img");
-                let enlace = document.createElement("a");
-
-                nombre.innerHTML = datosPersonajes[i].name;
-                imagen.src = datosPersonajes[i].thumbnail.path + "." + datosPersonajes[i].thumbnail.extension;
-                enlace.href = "#";
-
-                personajes.appendChild(enlace);
-                enlace.appendChild(nombre);
-                personajes.appendChild(imagen);
-
-                enlace.onclick = function () {
-                    console.log(datosPersonajes[i].id)
-                    idPersonaje = datosPersonajes[i].id;
-                    getDetallePersonaje(idPersonaje);
-                }
-
-            }
-
-            /*Object.values(datos).map(item => {
-                console.log(item.results);
-                
-            });*/
-
+            resolve(datosPersonajes);
+        } else if (request.readyState == 4) {
+            reject('Ha ocurrido un error');
         }
     }
-    http.open("GET", "https://gateway.marvel.com:443/v1/public/characters?&apikey=" + apiKey, true);
-    http.send();
+
+    request.open("GET", "https://gateway.marvel.com:443/v1/public/characters?&apikey=" + apiKey, true);
+    request.send();
+});
+
+var idPersonaje;
+getPersonajesPromise().then((datosPersonajes) => {
+
+    personajes.innerHTML = "";
+
+    for (let i = 0; i < datosPersonajes.length; i++) {
+
+        let nombre = document.createElement("h2");
+        let imagen = document.createElement("img");
+        let enlace = document.createElement("a");
+
+        nombre.innerHTML = datosPersonajes[i].name;
+        imagen.src = datosPersonajes[i].thumbnail.path + "." + datosPersonajes[i].thumbnail.extension;
+        enlace.href = "#";
+
+        personajes.appendChild(enlace);
+        enlace.appendChild(nombre);
+        personajes.appendChild(imagen);
+
+        enlace.onclick = function () {
+            console.log(datosPersonajes[i].id)
+            idPersonaje = datosPersonajes[i].id;
+            getDetallePersonaje(idPersonaje);
+        }
+    }
+
+}, (err) => {
+    console.log(`Error: ${err}`);
+})
+
+/* FETCH API */
+const getComicsFetch = () => {
+    return fetch("https://gateway.marvel.com:443/v1/public/comics?apikey=" + apiKey)
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json()
+            } else {
+                throw new Error("Error al conectar con la API");
+            }
+        })
 }
-getPersonajes();
 
 var idComic;
-function getComics() {
-    let http = new XMLHttpRequest();
-    http.onreadystatechange = function () {
-        comics.appendChild(miSpinner);
-        if (http.readyState == 4 && http.status == 200) {
+getComicsFetch().then((datos) => {
+    let datosComics = datos.data.results;
 
-            let datos = JSON.parse(this.responseText);
-            let datosComics = Object.values(datos.data.results);
+    comics.innerHTML = "";
 
-            comics.innerHTML = "";
+    for (let i = 0; i < 10; i++) {
 
-            for (let i = 0; i < 10; i++) {
+        let titulo = document.createElement("h2");
+        let enlace = document.createElement("a");
+        let descripcion = document.createElement("div");
+        let imagen = document.createElement("img");
 
-                let titulo = document.createElement("h2");
-                let enlace = document.createElement("a");
-                let descripcion = document.createElement("div");
-                let imagen = document.createElement("img");
+        titulo.innerHTML = datosComics[i].title;
+        enlace.href = "#";
+        descripcion.className = "article";
+        descripcion.innerHTML = datosComics[i].description;
+        
+        $(".article").readmore(); //librería externa de jQuery
+        imagen.src = datosComics[i].thumbnail.path + "." + datosComics[i].thumbnail.extension;
 
-                titulo.innerHTML = datosComics[i].title;
-                enlace.href = "#";
-                descripcion.className = "article";
-                descripcion.innerHTML = datosComics[i].description;
-                //librería externa de jQuery
-                $(".article").readmore();
-                imagen.src = datosComics[i].thumbnail.path + "." + datosComics[i].thumbnail.extension;
+        comics.appendChild(enlace);
+        enlace.appendChild(titulo);
+        comics.appendChild(imagen);
+        comics.appendChild(descripcion);
 
-                comics.appendChild(enlace);
-                enlace.appendChild(titulo);
-                comics.appendChild(imagen);
-                comics.appendChild(descripcion);
-
-                enlace.onclick = function () {
-                    idComic = datosComics[i].id;
-                    getDetalleComic(idComic);
-                }
-
-            }
+        enlace.onclick = function () {
+            idComic = datosComics[i].id;
+            getDetalleComic(idComic);
         }
     }
-    http.open("GET", "https://gateway.marvel.com:443/v1/public/comics?apikey=" + apiKey, true);
-    http.send();
-}
+
+}).catch((error) => {
+    console.log(error);
+})
+
+/* PROMISES */
+const getComicsPromises = () => new Promise((resolve, reject) => {
+
+    let request = new XMLHttpRequest();
+    request.onreadystatechange = (e) => {
+        if (request.readyState == 4 && request.status == 200) {
+
+            let datos = JSON.parse(e.target.responseText);
+            let datosComics = Object.values(datos.data.results);
+            resolve(datosComics);
+        } else if (request.readyState == 4) {
+            reject("Ha ocurrido un error");
+        }
+    }
+
+    request.open("GET", "https://gateway.marvel.com:443/v1/public/comics?apikey=" + apiKey, true);
+    request.send();
+});
 
 function getDetalleComic(detalleId) {
     let http = new XMLHttpRequest();
@@ -199,7 +225,6 @@ function verMas() {
     }
 }
 
-getComics();
 
 function busquedaDOM(textoIntroducido, url, elemento) {
     let http = new XMLHttpRequest();
@@ -282,7 +307,7 @@ function busqueda() {
     };
 }
 
-/** PAGINACION */
+/** PAGINACION
 $(function () {
     (function (name) {
         var container = $('#personajes-' + name);
@@ -312,3 +337,4 @@ $(function () {
     })('demo2');
 
 })
+*/
