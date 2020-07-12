@@ -14,9 +14,11 @@
 <body>
     <div class="container">
 
+        <!-- HEADER -->
         <h1 class="h1 text-center"><img src="img/marvel-logo.png" id="logo"></h1>
 
-        <div class="input-group input-group-lg pb-5 pt-2" id="miBusqueda">
+        <!-- Search Bar -->
+        <!--<div class="input-group input-group-lg pb-5 pt-2" id="miBusqueda">
             <div class="input-group-prepend">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="miBoton"
                     data-toggle="dropdown">Buscar por</button>
@@ -26,17 +28,35 @@
                 </div>
             </div>
             <input type="text" class="form-control" placeholder="Busca por comic o personaje...">
-            <button class="btn btn-outline-secondary text-center ml-2" onclick="window.location.href = 'eventos.html';">Eventos</button>
-        </div>
+            <button class="btn btn-outline-secondary text-center ml-2"
+                onclick="window.location.href = 'eventos.html';">Eventos</button>
+        </div>-->
 
-    <div class="row">
-        <div id="personajes" class="col-6">
-            <h1>Personajes</h1>
+        <!-- content -->
+        <!--<div class="row">
+            <div id="personajes" class="col-6">
+                <h1>Personajes</h1>
+            </div>
+            <div id="comics" class="col-6">
+                <h1>Comics</h1>
+            </div>
+        </div>-->
+
+        <div id="main">
+            <div class="row">
+                <div id="characters" class="col-6 envoltorio-portada">
+                    <img class="img-portada" src="./img/marvel-select.jpg" alt='characters'>
+                    <span>Personajes ></span>
+                </div>
+
+                <div id="comics2" class="col-6 envoltorio-portada">
+                    <img class="img-portada" src="./img/marvel-select.jpg" alt='comics'>
+                    <span>Comics ></span>
+                </div>
+
+            </div>
+            <div id='show'></div>
         </div>
-        <div id="comics" class="col-6">
-            <h1>Comics</h1>
-        </div>
-    </div>
     </div>
 
 </body>
@@ -44,8 +64,9 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
-<script src="js/readmore.js"></script> <!-- librería externa de jQuery -->
-<script src="js/marvel.js"></script>
+<script src="js/main.js"></script>
+<script src="js/getPersonajes.js"></script>
+<script src="js/getComics.js"></script>
 
 <!-- Bootstrap -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"

@@ -1,63 +1,17 @@
 const apiKey = config.YOUR_API;
 let personajes = document.querySelector("#personajes");
 let comics = document.querySelector("#comics");
+let show = document.querySelector('#show');
 const urlComicStartWith = "https://gateway.marvel.com:443/v1/public/comics?titleStartsWith=";
 const urlPersonajeStartWith = "https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=";
 let miSpinner = document.createElement("img");
 miSpinner.src = "img/spinner.gif";
 
-/* PROMISES */
-const getPersonajesPromise = () => new Promise((resolve, reject) => {
-
-    let request = new XMLHttpRequest();
-    request.onreadystatechange = (e) => {
-        if (request.readyState == 4 && request.status == 200) {
-
-            let datos = JSON.parse(e.target.responseText);
-            let datosPersonajes = Object.values(datos.data.results);
-            resolve(datosPersonajes);
-        } else if (request.readyState == 4) {
-            reject('Ha ocurrido un error');
-        }
-    }
-
-    request.open("GET", "https://gateway.marvel.com:443/v1/public/characters?&apikey=" + apiKey, true);
-    request.send();
-});
-
-var idPersonaje;
-getPersonajesPromise().then((datosPersonajes) => {
-
-    personajes.innerHTML = "";
-
-    for (let i = 0; i < datosPersonajes.length; i++) {
-
-        let nombre = document.createElement("h2");
-        let imagen = document.createElement("img");
-        let enlace = document.createElement("a");
-
-        nombre.innerHTML = datosPersonajes[i].name;
-        imagen.src = datosPersonajes[i].thumbnail.path + "." + datosPersonajes[i].thumbnail.extension;
-        enlace.href = "#";
-
-        personajes.appendChild(enlace);
-        enlace.appendChild(nombre);
-        personajes.appendChild(imagen);
-
-        enlace.onclick = function () {
-            console.log(datosPersonajes[i].id)
-            idPersonaje = datosPersonajes[i].id;
-            getDetallePersonaje(idPersonaje);
-        }
-    }
-
-}, (err) => {
-    console.log(`Error: ${err}`);
-})
 
 /* FETCH API */
-const getComicsFetch = () => {
-    return fetch("https://gateway.marvel.com:443/v1/public/comics?apikey=" + apiKey)
+/* Abstracción de código */
+const getData = (tipo) => {
+    return fetch(`https://gateway.marvel.com:443/v1/public/${tipo}?apikey=${apiKey}`)
         .then((response) => {
             if (response.status === 200) {
                 return response.json()
@@ -67,61 +21,63 @@ const getComicsFetch = () => {
         })
 }
 
-var idComic;
-getComicsFetch().then((datos) => {
-    let datosComics = datos.data.results;
+let main = document.querySelector('#main').getElementsByTagName('img');
+let row = document.querySelector('.row');
+const display = () => {
+    var idComic;
+    Array.from(main).forEach(element => {
+        element.addEventListener('click', e => {
 
-    comics.innerHTML = "";
-
-    for (let i = 0; i < 10; i++) {
-
-        let titulo = document.createElement("h2");
-        let enlace = document.createElement("a");
-        let descripcion = document.createElement("div");
-        let imagen = document.createElement("img");
-
-        titulo.innerHTML = datosComics[i].title;
-        enlace.href = "#";
-        descripcion.className = "article";
-        descripcion.innerHTML = datosComics[i].description;
+            getData(e.target.alt).then((datos) => {
+                let miData = datos.data.results;
         
-        $(".article").readmore(); //librería externa de jQuery
-        imagen.src = datosComics[i].thumbnail.path + "." + datosComics[i].thumbnail.extension;
+                row.innerHTML = "";
+        
+                miData.forEach(comic => {
+        
+                    let titulo = document.createElement("h2");
+                    let enlace = document.createElement("a");
+                    let descripcion = document.createElement("div");
+                    let imagen = document.createElement("img");
+        
+                    titulo.innerHTML = comic.name;
+                    enlace.href = "#";
+                    descripcion.className = "article";
+                    descripcion.innerHTML = comic.description;
+        
+                    //$(".article").readmore(); //librería externa de jQuery
+                    imagen.src = comic.thumbnail.path + "." + comic.thumbnail.extension;
+        
+                    show.appendChild(enlace);
+                    enlace.appendChild(titulo);
+                    show.appendChild(imagen);
+                    show.appendChild(descripcion);
+        
+                    enlace.onclick = function () {
+                        idComic = comic.id;
+                        getDetalleComic(idComic);
+                    }
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
+        })
+    });
+}
 
-        comics.appendChild(enlace);
-        enlace.appendChild(titulo);
-        comics.appendChild(imagen);
-        comics.appendChild(descripcion);
+display();
 
-        enlace.onclick = function () {
-            idComic = datosComics[i].id;
-            getDetalleComic(idComic);
-        }
-    }
-
-}).catch((error) => {
-    console.log(error);
-})
-
-/* PROMISES */
-const getComicsPromises = () => new Promise((resolve, reject) => {
-
-    let request = new XMLHttpRequest();
-    request.onreadystatechange = (e) => {
-        if (request.readyState == 4 && request.status == 200) {
-
-            let datos = JSON.parse(e.target.responseText);
-            let datosComics = Object.values(datos.data.results);
-            resolve(datosComics);
-        } else if (request.readyState == 4) {
-            reject("Ha ocurrido un error");
-        }
-    }
-
-    request.open("GET", "https://gateway.marvel.com:443/v1/public/comics?apikey=" + apiKey, true);
-    request.send();
+/*
+let main = document.querySelector('#main').getElementsByTagName('img');
+Array.from(main).forEach(element => {
+    element.addEventListener('click', e => {
+        console.log(e.target.alt)
+        getData(e.target.alt);
+    })
 });
+*/
 
+/* RE-HACER */
 function getDetalleComic(detalleId) {
     let http = new XMLHttpRequest();
     http.onreadystatechange = function () {
@@ -156,7 +112,7 @@ function getDetalleComic(detalleId) {
 
                 botonVolver.onclick = function () {
                     comics.innerHTML = "";
-                    getComics();
+                    displayComics();
                 }
 
             }
@@ -197,7 +153,7 @@ function getDetallePersonaje(detalleId) {
 
                 botonVolver.onclick = function () {
                     personajes.innerHTML = "";
-                    getPersonajes();
+                    displayPersonaje();
                 }
 
             }
@@ -224,7 +180,6 @@ function verMas() {
         moreText.style.display = "inline";
     }
 }
-
 
 function busquedaDOM(textoIntroducido, url, elemento) {
     let http = new XMLHttpRequest();
@@ -306,35 +261,3 @@ function busqueda() {
         }
     };
 }
-
-/** PAGINACION
-$(function () {
-    (function (name) {
-        var container = $('#personajes-' + name);
-        container.pagination({
-            dataSource: 'https://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?',
-            locator: 'items',
-            totalNumber: 120,
-            pageSize: 20,
-            ajax: {
-                beforeSend: function () {
-                    container.prev().html('Loading data from flickr.com ...');
-                }
-            },
-            callback: function (response, pagination) {
-                window.console && console.log(22, response, pagination);
-                var dataHtml = '<ul>';
-
-                $.each(response, function (index, item) {
-                    dataHtml += '<li>' + item.title + '</li>';
-                });
-
-                dataHtml += '</ul>';
-
-                container.prev().html(dataHtml);
-            }
-        })
-    })('demo2');
-
-})
-*/
