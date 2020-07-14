@@ -12,10 +12,12 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class='container'>
 
         <!-- HEADER -->
-        <h1 class="h1 text-center"><img src="img/marvel-logo.png" id="logo"></h1>
+        <a href="./index.html">
+            <h1 class="h1 text-center"><img src="./img/marvel-logo.png" id="logo"></h1>
+        </a>
 
         <!-- Search Bar -->
         <!--<div class="input-group input-group-lg pb-5 pt-2" id="miBusqueda">
@@ -33,29 +35,22 @@
         </div>-->
 
         <!-- content -->
-        <!--<div class="row">
-            <div id="personajes" class="col-6">
-                <h1>Personajes</h1>
-            </div>
-            <div id="comics" class="col-6">
-                <h1>Comics</h1>
-            </div>
-        </div>-->
-
         <div id="main">
             <div class="row">
                 <div id="characters" class="col-6 envoltorio-portada">
-                    <img class="img-portada" src="./img/marvel-select.jpg" alt='characters'>
-                    <span>Personajes ></span>
+                    <img id='home1' class="img-home" src="./img/marvel-select.jpg" alt='characters'>
+                    <span class="titulo">Personajes ></span>
                 </div>
 
                 <div id="comics2" class="col-6 envoltorio-portada">
-                    <img class="img-portada" src="./img/marvel-select.jpg" alt='comics'>
-                    <span>Comics ></span>
+                    <img id='home2' class="img-home" src="./img/marvel-select.jpg" alt='comics'>
+                    <span class="titulo">Comics ></span>
                 </div>
 
             </div>
-            <div id='show'></div>
+            <div id='searchBar'></div>
+            <div id='show'>
+            </div>
         </div>
     </div>
 

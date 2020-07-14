@@ -1,11 +1,14 @@
 const apiKey = config.YOUR_API;
-let personajes = document.querySelector("#personajes");
-let comics = document.querySelector("#comics");
+//let personajes = document.querySelector("#personajes");
 let show = document.querySelector('#show');
+let searchBar = document.querySelector('#searchBar');
 const urlComicStartWith = "https://gateway.marvel.com:443/v1/public/comics?titleStartsWith=";
 const urlPersonajeStartWith = "https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=";
-let miSpinner = document.createElement("img");
-miSpinner.src = "img/spinner.gif";
+//let miSpinner = document.createElement("img");
+let main = document.querySelector('#main').getElementsByTagName('img');
+let divs = document.querySelector('#show').getElementsByTagName('div');
+let row = document.querySelector('.row');
+//miSpinner.src = "img/spinner.gif";
 
 
 /* FETCH API */
@@ -21,43 +24,36 @@ const getData = (tipo) => {
         })
 }
 
-let main = document.querySelector('#main').getElementsByTagName('img');
-let row = document.querySelector('.row');
+/* PAGINACION */
+//https://gateway.marvel.com:443/v1/public/characters?limit=20&offset=0&apikey=
+
 const display = () => {
-    var idComic;
+    let contentHTML = '';
     Array.from(main).forEach(element => {
         element.addEventListener('click', e => {
-
             getData(e.target.alt).then((datos) => {
+                row.innerHTML = '';
                 let miData = datos.data.results;
-        
-                row.innerHTML = "";
-        
-                miData.forEach(comic => {
-        
-                    let titulo = document.createElement("h2");
-                    let enlace = document.createElement("a");
-                    let descripcion = document.createElement("div");
-                    let imagen = document.createElement("img");
-        
-                    titulo.innerHTML = comic.name;
-                    enlace.href = "#";
-                    descripcion.className = "article";
-                    descripcion.innerHTML = comic.description;
-        
-                    //$(".article").readmore(); //librería externa de jQuery
-                    imagen.src = comic.thumbnail.path + "." + comic.thumbnail.extension;
-        
-                    show.appendChild(enlace);
-                    enlace.appendChild(titulo);
-                    show.appendChild(imagen);
-                    show.appendChild(descripcion);
-        
-                    enlace.onclick = function () {
-                        idComic = comic.id;
-                        getDetalleComic(idComic);
-                    }
+                miData.forEach(field => {
+
+                    renderSearchBar();
+                    contentHTML = `
+                        <div id='${field.id}' class='${e.target.alt}'>
+                            <img src='${field.thumbnail.path}.${field.thumbnail.extension}' />
+                            <a href=''>
+                                <h2 class='titulo'>${field.name}</h2>
+                            </a>
+                        </div>`;
+                    show.innerHTML += contentHTML;
+
+                    Array.from(divs).forEach(element => {
+                        element.addEventListener('click', e => {
+                            displayDetail(e.currentTarget.className, e.currentTarget.id);
+                        })
+
+                    })
                 });
+
             }).catch((error) => {
                 console.log(error);
             })
@@ -67,102 +63,33 @@ const display = () => {
 
 display();
 
-/*
-let main = document.querySelector('#main').getElementsByTagName('img');
-Array.from(main).forEach(element => {
-    element.addEventListener('click', e => {
-        console.log(e.target.alt)
-        getData(e.target.alt);
+/* DETALLE */
+const getDataDetail = (tipo, detailId) => {
+    return fetch(`https://gateway.marvel.com:443/v1/public/${tipo}/${detailId}?apikey=${apiKey}`)
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json()
+            } else {
+                throw new Error("Error al conectar con la API");
+            }
+        })
+}
+
+const displayDetail = (tipo, detailId) => {
+    let contentHTML = '';
+    getDataDetail(tipo, detailId).then((datos) => {
+        console.log(datos.data);
+        let field = datos.data.results[0];
+        show.innerHTML = '';
+        contentHTML = `
+            <div class=''>
+                <h1>${field.name}</h1>
+                <img src='${field.thumbnail.path}.${field.thumbnail.extension}' />
+                <span>${field.description}</span>
+            </div>`;
+        show.innerHTML = contentHTML;
     })
-});
-*/
-
-/* RE-HACER */
-function getDetalleComic(detalleId) {
-    let http = new XMLHttpRequest();
-    http.onreadystatechange = function () {
-        comics.appendChild(miSpinner);
-        if (http.readyState == 4 && http.status == 200) {
-
-            let datos = JSON.parse(this.responseText);
-            let detalle = Object.values(datos.data.results);
-
-            for (let i = 0; i < detalle.length; i++) {
-
-                comics.innerHTML = "";
-
-                let titulo = document.createElement("h1");
-                let descripcion = document.createElement("div");
-                let imagen = document.createElement("img");
-                let botonVolver = document.createElement("button");
-
-                titulo.innerHTML = detalle[i].title;
-                if (titulo.innerHTML == "undefined") {
-                    titulo.innerHTML = detalle[i].name;
-                }
-                descripcion.innerHTML = detalle[i].description;
-                imagen.src = detalle[i].thumbnail.path + "." + detalle[i].thumbnail.extension;
-                botonVolver.className = "btn btn-info";
-                botonVolver.innerHTML = "Volver";
-
-                comics.appendChild(titulo);
-                comics.appendChild(imagen);
-                comics.appendChild(descripcion);
-                comics.appendChild(botonVolver);
-
-                botonVolver.onclick = function () {
-                    comics.innerHTML = "";
-                    displayComics();
-                }
-
-            }
-        }
-    }
-    http.open("GET", "https://gateway.marvel.com:443/v1/public/comics/" + detalleId + "?apikey=" + apiKey, true);
-    http.send();
-}
-
-function getDetallePersonaje(detalleId) {
-    let http = new XMLHttpRequest();
-    http.onreadystatechange = function () {
-        personajes.appendChild(miSpinner);
-        if (http.readyState == 4 && http.status == 200) {
-
-            let datos = JSON.parse(this.responseText);
-            let detalle = Object.values(datos.data.results);
-
-            for (let i = 0; i < detalle.length; i++) {
-
-                personajes.innerHTML = "";
-
-                let titulo = document.createElement("h1");
-                let descripcion = document.createElement("div");
-                let imagen = document.createElement("img");
-                let botonVolver = document.createElement("button");
-
-                titulo.innerHTML = detalle[i].name;
-                descripcion.innerHTML = detalle[i].description;
-                imagen.src = detalle[i].thumbnail.path + "." + detalle[i].thumbnail.extension;
-                botonVolver.className = "btn btn-info";
-                botonVolver.innerHTML = "Volver";
-
-                personajes.appendChild(titulo);
-                personajes.appendChild(imagen);
-                personajes.appendChild(descripcion);
-                personajes.appendChild(botonVolver);
-
-                botonVolver.onclick = function () {
-                    personajes.innerHTML = "";
-                    displayPersonaje();
-                }
-
-            }
-        }
-    }
-    http.open("GET", "https://gateway.marvel.com:443/v1/public/characters/" + detalleId + "?apikey=" + apiKey, true);
-    http.send();
-}
-
+};
 
 //leer más
 function verMas() {
@@ -179,6 +106,21 @@ function verMas() {
         btnText.innerHTML = "Read less";
         moreText.style.display = "inline";
     }
+}
+
+const renderSearchBar = () => {
+    let contentHTML = `
+        <div class="input-group input-group-lg pb-5 pt-2" id="miBusqueda">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="miBoton"
+                data-toggle="dropdown">Buscar por</button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" onclick="busqueda()">Comic</a>
+                <a class="dropdown-item" onclick="busqueda()">Personaje</a>
+            </div>
+        </div>
+        <input type="text" class="form-control" placeholder="Busca en Marvel...">`
+    searchBar.innerHTML = contentHTML;
 }
 
 function busquedaDOM(textoIntroducido, url, elemento) {
@@ -253,7 +195,7 @@ function busqueda() {
             console.log("buscando por comic");
             barraBuscar.addEventListener("keyup", function () {
                 console.log(barraBuscar.value);
-                busquedaDOM(barraBuscar.value, urlComicStartWith, comics);
+                busquedaDOM(barraBuscar.value, urlComicStartWith, show);
             });
 
         } else if (buttonDropdown.innerHTML == "undefined") {

@@ -1,19 +1,18 @@
-img {
-    width: 450px;
-    height: 500px;
+/*img {
+    width: 190px;
+    height: 220px;
     margin-bottom: 10px;
     margin-bottom: 10px;
+}*/
+
+#show div {
+    max-width: 250px;
+    max-height: 500px;
 }
 
-#personajes {
-    left: 0;
-    height: 70%;
-    padding-left: 100px;
-    width: 50%;
-    position: fixed;
-    z-index: 1;
-    overflow-x: hidden;
-    text-align: center;
+#show div img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .article {
@@ -31,14 +30,10 @@ img {
     color: darkred;
 }
 
-#comics {
-    right: 0;
-    height: 70%;
-    width: 50%;
-    position: fixed;
-    z-index: 1;
-    overflow-x: hidden;
-    text-align: center;
+#show {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 #logo {
@@ -47,7 +42,7 @@ img {
     margin-left: 0px;
 }
 
-.img-portada {
+.img-home {
     width: 400px;
     height: 500px;
 }
@@ -55,4 +50,10 @@ img {
 .envoltorio-portada:hover {
     border: 2px solid black;
     cursor: pointer;
+}
+
+.titulo {
+    display: block;
+    font-size: 1rem;
+    white-space: normal;
 }
