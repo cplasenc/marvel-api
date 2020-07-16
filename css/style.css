@@ -8,6 +8,8 @@
 #show div {
     max-width: 250px;
     max-height: 500px;
+    margin: 10px;
+    cursor: pointer;
 }
 
 #show div img {
