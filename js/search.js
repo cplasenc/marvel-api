@@ -11,16 +11,26 @@ const getDataSearch = async (inputText, tipo, startsWith) => {
 const displaySearch = (inputText, tipo, startsWith) => {
     let contentHTML = '';
     getDataSearch(inputText, tipo, startsWith).then((datos) => {
-        console.log(datos.data.results[0]);
-        let field = datos.data.results[0];
-        show.innerHTML = '';
-        contentHTML = `
-            <div class=''>
-                <h1>${(global == 'characters') ? field.name : field.title}</h1>
-                <img src='${field.thumbnail.path}.${field.thumbnail.extension}' />
-                <span>${field.description}</span>
+        console.log(datos.data.results);
+        let field = datos.data.results;
+        content.innerHTML = '';
+        field.forEach(element => {
+            contentHTML = `
+            <div id="${element.id}" class="${global}">
+                <h2 class="titulo">${(global == 'characters') ? element.name : element.title}</h2>
+                <img src='${element.thumbnail.path}.${element.thumbnail.extension}' />
             </div>`;
-        show.innerHTML = contentHTML;
+            content.innerHTML += contentHTML;
+
+            //recorre divs para encontrar id y tipo de consulta (character, comic, etc)
+            Array.from(divs).forEach(element => {
+                element.addEventListener('click', e => {
+                    e.preventDefault();
+                    console.log(e.currentTarget.className, e.currentTarget.id)
+                    displayDetail(e.currentTarget.className, e.currentTarget.id);
+                });
+            });
+        })
     });
 }
 
@@ -31,14 +41,14 @@ const search = () => {
         console.log((barraBuscar.value).length);
 
         if ((barraBuscar.value).length === 0) {
-            show.innerHTML = '';
+            content.innerHTML = '';
             reset();
         } else {
             if (global == 'characters') {
-                show.innerHTML = '';
+                content.innerHTML = '';
                 displaySearch(barraBuscar.value, global, 'nameStartsWith');
             } else if (global == 'comics') {
-                show.innerHTML = '';
+                content.innerHTML = '';
                 displaySearch(barraBuscar.value, global, 'titleStartsWith');
             }
         }
@@ -48,7 +58,6 @@ const search = () => {
 /**
  * barra de busqueda
  */
-
 const renderSearchBar = () => {
     let contentHTML = `
         <div class="input-group input-group-lg pb-5 pt-2" id=miBusqueda>
@@ -62,7 +71,7 @@ const renderSearchBar = () => {
 const reset = () => {
     let contentHTML = '';
     getData(global).then((datos) => {
-        show.innerHTML = '';
+        content.innerHTML = '';
         let miData = datos.data.results;
         miData.forEach(field => {
             contentHTML = `
@@ -72,7 +81,7 @@ const reset = () => {
                                 <h2 class='titulo'>${(global == 'characters') ? field.name : field.title}</h2>
                             </a>
                         </div>`;
-            show.innerHTML += contentHTML;
+            content.innerHTML += contentHTML;
 
             Array.from(divs).forEach(element => {
                 element.addEventListener('click', e => {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -14,56 +14,44 @@
 <body>
     <div class='container'>
 
-        <!-- HEADER -->
+        <!-- header -->
         <a href="./index.html">
             <h1 class="h1 text-center"><img src="./img/marvel-logo.png" id="logo"></h1>
         </a>
 
-        <!-- Search Bar -->
-        <!--<div class="input-group input-group-lg pb-5 pt-2" id="miBusqueda">
-            <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="miBoton"
-                    data-toggle="dropdown">Buscar por</button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" onclick="busqueda()">Comic</a>
-                    <a class="dropdown-item" onclick="busqueda()">Personaje</a>
-                </div>
-            </div>
-            <input type="text" class="form-control" placeholder="Busca por comic o personaje...">
-            <button class="btn btn-outline-secondary text-center ml-2"
-                onclick="window.location.href = 'eventos.html';">Eventos</button>
-        </div>-->
-
-        <!-- content -->
-        <div id="main">
+        <!-- portada -->
+        <div id="home">
             <div class="row">
                 <div id="characters" class="col-6 envoltorio-portada">
-                    <img id='home1' class="img-home" src="./img/marvel-select.jpg" alt='characters'>
+                    <img id="home1" class="img-home" src="./img/marvel-select.jpg" alt="characters">
                     <span class="titulo">Personajes ></span>
                 </div>
 
                 <div id="comics2" class="col-6 envoltorio-portada">
-                    <img id='home2' class="img-home" src="./img/marvel-select.jpg" alt='comics'>
+                    <img id='home2' class="img-home" src="./img/marvel-select.jpg" alt="comics">
                     <span class="titulo">Comics ></span>
                 </div>
             </div>
 
-            <div id='searchBar'></div>
-            <div id='show'></div>
-            <button id='display-more'> Cargar más </button>
+            <!-- barra de busqueda -->
+            <div id="search-bar"></div>
+            <!-- contenido -->
+            <div id="content"></div>
+            <!-- boton cargar más -->
+            <button id="display-more" class="hide">Cargar más</button>
         </div>
     </div>
 
 </body>
-<script src='./js/config.js'></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+<script src="./js/config.js"></script>
 <script src="./js/main.js"></script>
 <script src="./js/getDetails.js"></script>
 <script src="./js/search.js"></script>
 
 <!-- Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
     crossorigin="anonymous"></script>
