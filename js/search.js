@@ -1,5 +1,11 @@
-const getDataSearch = async (inputText, tipo, startsWith) => {
-    const response = await fetch(`https://gateway.marvel.com:443/v1/public/${tipo}?${startsWith}=${inputText}&apikey=${apiKey}`);
+/**
+ * Consulta ejecutada al utilizar la barra de busqueda
+ * @param {*} inputText - texto introducido en la barra de busqueda
+ * @param {*} global - tipo de busqueda
+ * @param {*} startsWith - titleStartsWith, nameStartsWith
+ */
+const getDataSearch = async (inputText, global, startsWith) => {
+    const response = await fetch(`https://gateway.marvel.com:443/v1/public/${global}?${startsWith}=${inputText}&apikey=${apiKey}`);
     if (response.status === 200) {
         return response.json();
     }
@@ -8,6 +14,12 @@ const getDataSearch = async (inputText, tipo, startsWith) => {
     }
 }
 
+/**
+ * Dibuja el resultado de la consulta de busqueda
+ * @param {*} inputText 
+ * @param {*} tipo 
+ * @param {*} startsWith 
+ */
 const displaySearch = (inputText, tipo, startsWith) => {
     let contentHTML = '';
     displayMore.style.display = 'none';
@@ -35,8 +47,10 @@ const displaySearch = (inputText, tipo, startsWith) => {
     });
 }
 
+/**
+ * Ejecuta la función displaySearch() con los parametros introducidos por el usuario
+ */
 const search = () => {
-    console.log("buscando por personaje");
     let barraBuscar = document.getElementById("miBusqueda").querySelector("input");
     barraBuscar.addEventListener("keyup", function () {
         console.log((barraBuscar.value).length);
@@ -57,7 +71,7 @@ const search = () => {
 }
 
 /**
- * barra de busqueda
+ * Barra de busqueda
  */
 const renderSearchBar = () => {
     let contentHTML = `

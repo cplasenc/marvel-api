@@ -1,9 +1,9 @@
 /**
- * petición para conseguir un objeto específico
- * @param {*} tipo 
- * @param {*} detailId 
+ * Consulta para conseguir un objeto específico
+ * @param {*} global - tipo de consulta
+ * @param {*} detailId - identificador del objeto sobre el que consultar
  */
-const getDataDetail = async (tipo, detailId) => {
+const getDataDetail = async (global, detailId) => {
     const response = await fetch(`https://gateway.marvel.com:443/v1/public/${tipo}/${detailId}?apikey=${apiKey}`);
     if (response.status === 200) {
         return response.json();
@@ -13,6 +13,11 @@ const getDataDetail = async (tipo, detailId) => {
     }
 }
 
+/**
+ * Dibuja el objeto específico devuelto por la consulta
+ * @param {*} tipo 
+ * @param {*} detailId 
+ */
 const displayDetail = (tipo, detailId) => {
     let contentHTML = '';
     getDataDetail(tipo, detailId).then((datos) => {
