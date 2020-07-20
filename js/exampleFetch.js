@@ -1,5 +1,5 @@
 /* FETCH API */
-/*const getComicsFetch = () => {
+const getComicsFetch = () => {
     return fetch(`https://gateway.marvel.com:443/v1/public/comics?apikey=${apiKey}`)
         .then((response) => {
             if (response.status === 200) {
@@ -47,4 +47,4 @@ const displayComics = () => {
     })
 }
 
-displayComics();*/
+displayComics();

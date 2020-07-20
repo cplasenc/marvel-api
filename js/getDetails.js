@@ -28,4 +28,5 @@ const displayDetail = (tipo, detailId) => {
             </div>`;
         content.innerHTML = contentHTML;
     });
+    displayMore.style.display = 'none';
 };

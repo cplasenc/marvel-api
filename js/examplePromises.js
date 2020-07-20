@@ -1,5 +1,5 @@
 /* PROMISES */
-/*const getPersonajesPromise = () => new Promise((resolve, reject) => {
+const getPersonajesPromise = () => new Promise((resolve, reject) => {
 
     let request = new XMLHttpRequest();
     request.onreadystatechange = (e) => {
@@ -50,4 +50,4 @@ const displayPersonaje = () => {
     })
 }
 
-displayPersonaje();*/
+displayPersonaje();

@@ -10,15 +10,12 @@ let home1 = document.querySelector('#home1');
 let home2 = document.querySelector('#home2');
 let limit = 20;
 let offset = 0;
+let miSpinner = `<img src="img/spinner.gif"/>`
 
-//QUE LA IMAGEN DE PORTADA SEA DINAMICA CON UNA CONSULTA A LA API
 //ELIMINAR LLAVES CUANDO SE PUEDA EN FOR EACH PARA SIMPLIFICAR
 
-/* PAGINACION 
-https://gateway.marvel.com:443/v1/public/characters?limit=20&offset=0&apikey=
-asociar onclik al boton y por cada click incrementar el numero en 20
-si no hay click limit=20 y offset=0
-*/
+//COMENTAR EL CÓDIGO
+//
 
 const getData = async (tipo, limit, offset) => {
     const response = await fetch(`https://gateway.marvel.com:443/v1/public/${tipo}?limit=${limit}&offset=${offset}&apikey=${apiKey}`);
@@ -56,6 +53,7 @@ displayHome().then((result) => {
 
 const display = (global, limit, offset) => {
     let contentHTML = '';
+    
     getData(global, limit, offset).then((datos) => {
         row.innerHTML = '';
         let miData = datos.data.results;
@@ -93,17 +91,13 @@ const getGlobal = () => new Promise((resolve, reject) => {
     Array.from(imgs).forEach(img => {
         img.addEventListener('click', e => {
             global = e.target.alt;
-            resolve();
+            resolve(global);
             display(global, limit, offset);
+            row.innerHTML = miSpinner;
             displayMore.classList.toggle('hide');
         });
     });
 });
-
-const renderDisplayMore = () => {
-    let contentHTML = `<button id="display-more">Cargar más</button>`;
-    displayMore.innerHTML.contentHTML;
-}
 
 getGlobal().then((result) => {
     displayMore.addEventListener('click', () => {
@@ -112,3 +106,8 @@ getGlobal().then((result) => {
         display(result, limit, offset);
     });    
 });
+
+// const renderDisplayMore = () => {
+//     let contentHTML = `<button id="display-more">Cargar más</button>`;
+//     displayMore.innerHTML.contentHTML;
+// }

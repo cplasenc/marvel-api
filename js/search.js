@@ -10,6 +10,7 @@ const getDataSearch = async (inputText, tipo, startsWith) => {
 
 const displaySearch = (inputText, tipo, startsWith) => {
     let contentHTML = '';
+    displayMore.style.display = 'none';
     getDataSearch(inputText, tipo, startsWith).then((datos) => {
         console.log(datos.data.results);
         let field = datos.data.results;
@@ -30,7 +31,7 @@ const displaySearch = (inputText, tipo, startsWith) => {
                     displayDetail(e.currentTarget.className, e.currentTarget.id);
                 });
             });
-        })
+        });
     });
 }
 
@@ -82,7 +83,7 @@ const reset = () => {
                             </a>
                         </div>`;
             content.innerHTML += contentHTML;
-
+            
             Array.from(divs).forEach(element => {
                 element.addEventListener('click', e => {
                     e.preventDefault();
@@ -90,7 +91,6 @@ const reset = () => {
                 });
             });
         });
-
     }).catch((error) => {
         console.log(error);
     });
