@@ -10,9 +10,6 @@ let imgs = document.querySelector('#home').getElementsByTagName('img');
 let divs = content.getElementsByTagName('div');
 let miSpinner = `<img src="img/spinner.gif"/>`;
 
-//ELIMINAR LLAVES CUANDO SE PUEDA EN FOR EACH PARA SIMPLIFICAR
-//COMENTAR EL CÓDIGO
-
 /**
  * Realiza la consulta principal a la api de marvel
  * @param {*} global - tipo de consulta (characters, comics, etc)
